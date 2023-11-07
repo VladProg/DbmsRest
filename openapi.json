@@ -1,0 +1,1335 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "DBMS",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/databases": {
+            "get": {
+                "summary": "Get Databases",
+                "operationId": "get_databases_databases_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Databases Databases Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create Database",
+                "operationId": "create_database_databases_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewDatabase"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Database"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Database already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                },
+                                "example": {
+                                    "detail": "Database 'database_name' already exists"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/databases/{database_name}": {
+            "get": {
+                "summary": "Get Database",
+                "operationId": "get_database_databases__database_name__get",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Database"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Database was not found",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "detail": "Cannot find database 'database_name'"
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Database",
+                "operationId": "delete_database_databases__database_name__delete",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "404": {
+                        "description": "Database was not found",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "detail": "Cannot find database 'database_name'"
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/databases/{database_name}/tables/{table_id}": {
+            "get": {
+                "summary": "Get Table",
+                "operationId": "get_table_databases__database_name__tables__table_id__get",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    },
+                    {
+                        "name": "table_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Table Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Table"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Database or table was not found",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "database_not_found": {
+                                        "summary": "database not found",
+                                        "value": {
+                                            "detail": "Cannot find database 'database_name'"
+                                        }
+                                    },
+                                    "table_not_found": {
+                                        "summary": "table not found",
+                                        "value": {
+                                            "detail": "Database 'database_name' doesn't contain table #table_id"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Table",
+                "operationId": "delete_table_databases__database_name__tables__table_id__delete",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    },
+                    {
+                        "name": "table_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Table Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "404": {
+                        "description": "Database or table was not found",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "database_not_found": {
+                                        "summary": "database not found",
+                                        "value": {
+                                            "detail": "Cannot find database 'database_name'"
+                                        }
+                                    },
+                                    "table_not_found": {
+                                        "summary": "table not found",
+                                        "value": {
+                                            "detail": "Database 'database_name' doesn't contain table #table_id"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/databases/{database_name}/tables/": {
+            "post": {
+                "summary": "Create Table",
+                "operationId": "create_table_databases__database_name__tables__post",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewTable"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Table"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Database was not found",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "detail": "Cannot find database 'database_name'"
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/databases/{database_name}/tables/{table_id}/rows": {
+            "get": {
+                "summary": "Get Table Rows",
+                "operationId": "get_table_rows_databases__database_name__tables__table_id__rows_get",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    },
+                    {
+                        "name": "table_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Table Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "$ref": "#/components/schemas/Row"
+                                    },
+                                    "title": "Response Get Table Rows Databases  Database Name  Tables  Table Id  Rows Get"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Database or table was not found",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "database_not_found": {
+                                        "summary": "database not found",
+                                        "value": {
+                                            "detail": "Cannot find database 'database_name'"
+                                        }
+                                    },
+                                    "table_not_found": {
+                                        "summary": "table not found",
+                                        "value": {
+                                            "detail": "Database 'database_name' doesn't contain table #table_id"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create Row",
+                "operationId": "create_row_databases__database_name__tables__table_id__rows_post",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    },
+                    {
+                        "name": "table_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Table Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewRow"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Row"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Database or table was not found",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "database_not_found": {
+                                        "summary": "database not found",
+                                        "value": {
+                                            "detail": "Cannot find database 'database_name'"
+                                        }
+                                    },
+                                    "table_not_found": {
+                                        "summary": "table not found",
+                                        "value": {
+                                            "detail": "Database 'database_name' doesn't contain table #table_id"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid row",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "incorrect_row_length": {
+                                        "summary": "incorrect row length",
+                                        "value": {
+                                            "detail": "Row length must be the same as number of columns"
+                                        }
+                                    },
+                                    "invalid_value": {
+                                        "summary": "invalid value",
+                                        "value": {
+                                            "detail": "Type1 expected but Type2 value 'value' found"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/databases/{database_name}/tables/{table_id}/rows/{row_id}": {
+            "get": {
+                "summary": "Get Row",
+                "operationId": "get_row_databases__database_name__tables__table_id__rows__row_id__get",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    },
+                    {
+                        "name": "table_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Table Id"
+                        }
+                    },
+                    {
+                        "name": "row_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Row Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Row"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Database, table or row was not found",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "database_not_found": {
+                                        "summary": "database not found",
+                                        "value": {
+                                            "detail": "Cannot find database 'database_name'"
+                                        }
+                                    },
+                                    "table_not_found": {
+                                        "summary": "table not found",
+                                        "value": {
+                                            "detail": "Database 'database_name' doesn't contain table #table_id"
+                                        }
+                                    },
+                                    "row_not_found": {
+                                        "summary": "row not found",
+                                        "value": {
+                                            "detail": "Table #table_id in database 'database_name' doesn't contain row #row_id"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Row",
+                "operationId": "delete_row_databases__database_name__tables__table_id__rows__row_id__delete",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    },
+                    {
+                        "name": "table_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Table Id"
+                        }
+                    },
+                    {
+                        "name": "row_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Row Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "404": {
+                        "description": "Database, table or row was not found",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "database_not_found": {
+                                        "summary": "database not found",
+                                        "value": {
+                                            "detail": "Cannot find database 'database_name'"
+                                        }
+                                    },
+                                    "table_not_found": {
+                                        "summary": "table not found",
+                                        "value": {
+                                            "detail": "Database 'database_name' doesn't contain table #table_id"
+                                        }
+                                    },
+                                    "row_not_found": {
+                                        "summary": "row not found",
+                                        "value": {
+                                            "detail": "Table #table_id in database 'database_name' doesn't contain row #row_id"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/databases/{database_name}/tables/{table_id}/rows/{row_id}/cells/{column_id}": {
+            "patch": {
+                "summary": "Update Cell Value",
+                "operationId": "update_cell_value_databases__database_name__tables__table_id__rows__row_id__cells__column_id__patch",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    },
+                    {
+                        "name": "table_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Table Id"
+                        }
+                    },
+                    {
+                        "name": "row_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Row Id"
+                        }
+                    },
+                    {
+                        "name": "column_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Column Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "anyOf": [
+                                    {
+                                        "type": "integer"
+                                    },
+                                    {
+                                        "type": "number"
+                                    },
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/Color"
+                                    }
+                                ],
+                                "title": "Value"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Row"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Database, table, row or column was not found",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "database_not_found": {
+                                        "summary": "database not found",
+                                        "value": {
+                                            "detail": "Cannot find database 'database_name'"
+                                        }
+                                    },
+                                    "table_not_found": {
+                                        "summary": "table not found",
+                                        "value": {
+                                            "detail": "Database 'database_name' doesn't contain table #table_id"
+                                        }
+                                    },
+                                    "row_not_found": {
+                                        "summary": "row not found",
+                                        "value": {
+                                            "detail": "Table #table_id in database 'database_name' doesn't contain row #row_id"
+                                        }
+                                    },
+                                    "column_not_found": {
+                                        "summary": "column not found",
+                                        "value": {
+                                            "detail": "Table #table_id in database 'database_name' doesn't contain column #column_id"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid value",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "detail": "Type1 expected but Type2 value 'value' found"
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/databases/{database_name}/table_difference/{left_table_id}/{right_table_id}": {
+            "get": {
+                "summary": "Get Table Difference",
+                "operationId": "get_table_difference_databases__database_name__table_difference__left_table_id___right_table_id__get",
+                "parameters": [
+                    {
+                        "name": "database_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Database Name"
+                        }
+                    },
+                    {
+                        "name": "left_table_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Left Table Id"
+                        }
+                    },
+                    {
+                        "name": "right_table_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Right Table Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TableDifference"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Database or table was not found",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "database_not_found": {
+                                        "summary": "database not found",
+                                        "value": {
+                                            "detail": "Cannot find database 'database_name'"
+                                        }
+                                    },
+                                    "table_not_found": {
+                                        "summary": "table not found",
+                                        "value": {
+                                            "detail": "Database 'database_name' doesn't contain table #table_id"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Tables are incompatible",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "different_column_counts": {
+                                        "summary": "different column counts",
+                                        "value": {
+                                            "detail": "Table difference: tables have different column counts"
+                                        }
+                                    },
+                                    "different_column_types": {
+                                        "summary": "different column types",
+                                        "value": {
+                                            "detail": "Table difference: tables have different column types"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Color": {
+                "properties": {
+                    "r": {
+                        "type": "integer",
+                        "maximum": 255.0,
+                        "minimum": 0.0,
+                        "title": "R"
+                    },
+                    "g": {
+                        "type": "integer",
+                        "maximum": 255.0,
+                        "minimum": 0.0,
+                        "title": "G"
+                    },
+                    "b": {
+                        "type": "integer",
+                        "maximum": 255.0,
+                        "minimum": 0.0,
+                        "title": "B"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "r",
+                    "g",
+                    "b"
+                ],
+                "title": "Color"
+            },
+            "Column": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/Type"
+                    },
+                    "r_min": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 255.0,
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "R Min"
+                    },
+                    "r_max": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 255.0,
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "R Max"
+                    },
+                    "g_min": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 255.0,
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "G Min"
+                    },
+                    "g_max": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 255.0,
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "G Max"
+                    },
+                    "b_min": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 255.0,
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "B Min"
+                    },
+                    "b_max": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 255.0,
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "B Max"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "type"
+                ],
+                "title": "Column"
+            },
+            "Database": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "tables": {
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/Table"
+                        },
+                        "type": "object",
+                        "title": "Tables",
+                        "default": {}
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "title": "Database"
+            },
+            "HTTPError": {
+                "properties": {
+                    "detail": {
+                        "type": "string",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "detail"
+                ],
+                "title": "HTTPError"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "NewDatabase": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "title": "NewDatabase"
+            },
+            "NewRow": {
+                "properties": {
+                    "cells": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/Color"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Cells"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "cells"
+                ],
+                "title": "NewRow"
+            },
+            "NewTable": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "columns": {
+                        "items": {
+                            "$ref": "#/components/schemas/Column"
+                        },
+                        "type": "array",
+                        "title": "Columns"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "columns"
+                ],
+                "title": "NewTable"
+            },
+            "Row": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "minimum": 0.0,
+                        "title": "Id"
+                    },
+                    "cells": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/Color"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Cells"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "cells"
+                ],
+                "title": "Row"
+            },
+            "Table": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "minimum": 0.0,
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "columns": {
+                        "items": {
+                            "$ref": "#/components/schemas/Column"
+                        },
+                        "type": "array",
+                        "title": "Columns"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "columns"
+                ],
+                "title": "Table"
+            },
+            "TableDifference": {
+                "properties": {
+                    "left_table": {
+                        "$ref": "#/components/schemas/Table"
+                    },
+                    "right_table": {
+                        "$ref": "#/components/schemas/Table"
+                    },
+                    "columns": {
+                        "items": {
+                            "$ref": "#/components/schemas/Column"
+                        },
+                        "type": "array",
+                        "title": "Columns"
+                    },
+                    "rows": {
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/Row"
+                        },
+                        "type": "object",
+                        "title": "Rows",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "left_table",
+                    "right_table",
+                    "columns"
+                ],
+                "title": "TableDifference"
+            },
+            "Type": {
+                "type": "string",
+                "enum": [
+                    "Integer",
+                    "Real",
+                    "Char",
+                    "String",
+                    "Color",
+                    "ColorInvl"
+                ],
+                "title": "Type"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}
